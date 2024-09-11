@@ -1,17 +1,29 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';  // Import BrowserRouter
 import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { UserProvider } from './context/UserContext'; // Import UserProvider
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+// Register Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
+    navigator.serviceWorker.register(swUrl).then(registration => {
+      console.log('Service Worker registered with scope: ', registration.scope);
+    }).catch(error => {
+      console.error('Service Worker registration failed: ', error);
+    });
+  });
+}
+
+ReactDOM.render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>
+    <BrowserRouter>  {/* Bungkus App dengan BrowserRouter */}
+      <UserProvider>  {/* Bungkus App dengan UserProvider */}
+        <App />
+      </UserProvider>
+    </BrowserRouter>
+  </React.StrictMode>,
+  document.getElementById('root')
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

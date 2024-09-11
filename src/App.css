@@ -36,3 +36,136 @@
     transform: rotate(360deg);
   }
 }
+
+/* General styles for the navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-logo {
+  height: 40px;
+  margin-right: 8px; /* Adds 8px space between logo and text */
+}
+
+.navbar-text {
+  color: white; /* Sets text color to white */
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* Position the menu button in the top-right corner */
+.navbar-menu {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+}
+
+.navbar-menu button {
+  background-color: #0703f0;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+.navbar-menu button:hover {
+  background-color: #f01faa;
+}
+
+
+.modal-card-container {
+  display: flex;
+  flex-direction: column;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 20px;
+  gap: 15px;
+  padding-top: 50px;
+  width: 100%; /* Pastikan lebar 100% */
+  box-sizing: border-box; /* Pastikan padding termasuk dalam lebar */
+  overflow-x: hidden; /* Hindari scroll horizontal */
+}
+
+.modal-card {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: left; /* Mengatur teks menjadi rata kiri */
+  font-size: 18px;
+  color: #333;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  width: 100%; /* Pastikan ukuran penuh pada mobile */
+  margin-bottom: 10px;
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .modal-card-container {
+    padding: 10px; /* Kurangi padding pada perangkat kecil */
+  }
+}
+
+.modal-card:hover,
+.modal-card:focus {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.modal-card:focus {
+  outline: none; /* Hilangkan outline pada focus */
+}
+
+
+.modal-card:focus {
+  outline: none; /* Hilangkan outline pada focus */
+  background-color: #ffffff; /* Pastikan background tetap putih */
+}
+
+.modal-card-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-card-container::-webkit-scrollbar-thumb {
+  background-color: #888; /* Scrollbar thumb color */
+  border-radius: 10px; /* Rounded scrollbar */
+}
+
+.modal-card-container::-webkit-scrollbar-track {
+  background-color: #f1f1f1; /* Scrollbar track color */
+}
+
+.close-sheet-button {
+  position: absolute;
+  top: 10px; /* Adjust position for better alignment */
+  right: 10px; /* Adjust position for better alignment */
+  background-color: #ff0000; /* Red color */
+  color: white;
+  border: none;
+  border-radius: 50%; /* Circular shape */
+  width: 50px; /* Size of the button */
+  height: 50px; /* Size of the button */
+  font-size: 24px; /* Font size for the 'X' */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transitions */
+  z-index: 9999;
+}
+
+.close-sheet-button:hover {
+  background-color: #d00000; /* Darker red on hover */
+  transform: scale(1.1); /* Slight zoom effect on hover */
+}

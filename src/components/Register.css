@@ -1,0 +1,105 @@
+/* CSS styles for Register.js */
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+  }
+  
+  h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: aliceblue;
+  }
+  
+  form {
+    background: rgba(255, 255, 255, 0.87);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    width: 86%;
+    padding: 12px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #0e0e0e;
+    border: 2px solid black; 
+    font-size: 1rem;
+  }
+  
+  input::placeholder {
+    color: #383737;
+  }
+  
+  input:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  }
+  
+  button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #ff6a00;
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #ff8e42;
+  }
+  
+  span {
+    font-size: 1.5rem;
+  }
+
+  @media (min-width: 481px) {
+    span {
+      right: 30px; /* Move to the left by 20px compared to the original 10px */
+    }
+  }  
+  
+  @media (max-width: 480px) {
+    body {
+      padding: 20px;
+    }
+  
+    h2 {
+      font-size: 1.5rem;
+    }
+  
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      font-size: 0.9rem;
+    }
+  
+    button[type="submit"] {
+      font-size: 1rem;
+    }
+    form {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 220px;
+      margin: auto;
+    }
+  
+    span {
+      font-size: 1.2rem;
+    }
+  }
+  

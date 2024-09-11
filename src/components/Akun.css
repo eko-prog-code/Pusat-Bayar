@@ -1,0 +1,249 @@
+.akun-dashboard {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Sidebar Styles */
+.sidebar {
+  width: 250px;
+  background-color: #5ed0e46e;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: margin-left 0.3s ease, transform 0.3s ease;
+  /* Start with the sidebar open */
+  transform: translateX(0);
+}
+
+/* Sidebar Styles */
+.sidebar {
+  width: 250px;
+  background-color: #5ed0e46e;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: margin-left 0.3s ease, transform 0.3s ease;
+  color: white; /* Change text color to white */
+}
+
+.sidebar a {
+  color: white; /* Make sidebar links white */
+  text-decoration: none;
+}
+
+.sidebar a:hover {
+  text-decoration: underline;
+}
+
+ul {
+  list-style-type: none; /* Remove bullets from the list */
+  padding: 0;
+}
+
+/* Profile Styles (Optional Adjustments) */
+.profile-details {
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+  color: white; /* Change text color to white */
+}
+
+/* Adjust Data Section Text Colors */
+.profile-details strong {
+  color: white; /* Make strong tag text white */
+}
+
+.profile-container h3, .profile-container p {
+  color: white; /* Ensure all text inside profile container is white */
+}
+
+
+.sidebar.closed {
+  /* Move the sidebar out of view */
+  transform: translateX(-250px);
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+/* Sidebar Toggle Button */
+.sidebar-toggle {
+  position: absolute;
+  top: 20px;
+  right: -5px;
+  width: 30px;
+  height: 30px;
+  background-color: #f4f4f4;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Main Content Styles */
+.main-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  transition: margin-left 0.3s ease;
+}
+
+/* Adjust main content margin when sidebar is open */
+.main-content.with-sidebar {
+  margin-left: 0;
+}
+
+@media (min-width: 768px) {
+  /* On larger screens, adjust main content margin when sidebar is open */
+  .main-content.with-sidebar {
+    margin-left: 250px;
+  }
+}
+
+/* Profile Styles (Optional Adjustments) */
+.profile-container {
+  max-width: 800px;
+  margin: auto;
+}
+
+.profile-header {
+  margin-bottom: 20px;
+}
+
+.profile-picture-container {
+  margin-bottom: 20px;
+}
+
+.profile-picture {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.profile-picture-placeholder {
+  width: 150px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #ccc;
+  border-radius: 50%;
+}
+
+.profile-details {
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+}
+
+
+/* Akun.css */
+
+/* General sidebar styles */
+.sidebar {
+  width: 250px;
+  background-color: #5ed0e46e;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+/* Hide sidebar by default on mobile */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 40;
+    height: 100%;
+    transform: translateX(-100%);
+    z-index: 1000;
+    transition: transform 0.3s ease;
+  }
+
+  /* Sidebar when opened */
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Hide the sidebar toggle button on larger screens */
+  .hamburger-menu {
+    display: block;
+    position: absolute;
+    top: 30px; /* Adjust this value to move it further down */
+    left: 10px; /* Keeps it aligned to the left */
+    font-size: 30px;
+    cursor: pointer;
+    z-index: 1100; /* Ensure it's on top of other elements */
+  }
+}
+
+/* Hide hamburger button on larger screens */
+.hamburger-menu {
+  display: none;
+}
+
+/* Main content shift when sidebar is open on larger screens */
+.main-content.with-sidebar {
+  margin-left: 250px;
+}
+
+/* Ensure the main content fills the screen on smaller devices */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+  }
+}
+
+/* Unik prefix: unix-929 */
+
+/* Container untuk keseluruhan form info payment */
+.unix-929-payment-form-container {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  max-width: 400px;
+}
+
+/* Styling untuk input form */
+.unix-929-payment-form-container input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+/* Styling untuk tombol */
+.unix-929-payment-form-container button {
+  display: inline-block;
+  padding: 10px 15px;
+  font-size: 14px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect untuk tombol */
+.unix-929-payment-form-container button:hover {
+  background-color: #45a049;
+}
+
+/* Media query untuk tampilan mobile */
+@media (max-width: 600px) {
+  .unix-929-payment-form-container {
+    padding: 10px;
+    max-width: 100%;
+  }
+
+  .unix-929-payment-form-container button {
+    width: 100%;
+    padding: 12px;
+  }
+}

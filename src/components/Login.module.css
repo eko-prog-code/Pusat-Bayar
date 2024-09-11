@@ -1,0 +1,75 @@
+.unix-929LoginContainer {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .unix-929Title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .unix-929Form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .unix-929InputField {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    color: #fcf8f8;
+    border-radius: 5px;
+    transition: border-color 0.3s;
+  }
+  
+  .unix-929InputField:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  .unix-929PasswordContainer {
+    position: relative;
+  }
+  
+  .unix-929TogglePassword {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 20px;
+  }
+  
+  .unix-929Button {
+    padding: 10px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .unix-929Button:hover {
+    background-color: #0056b3;
+  }
+  
+  .unix-929Error {
+    color: red;
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  @media (min-width: 481px) {
+    span {
+      right: 30px; /* Move to the left by 20px compared to the original 10px */
+    }
+  }
