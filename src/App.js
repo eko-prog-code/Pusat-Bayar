@@ -1,9 +1,11 @@
+// App.js
 import React, { useState, useEffect, useContext } from 'react';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import Home from './components/Home';
 import Login from './components/Login';
 import Register from './components/Register';
 import Akun from './components/Akun';
+import Showcase from './components/Showcase'; // Import the Showcase component
 import './App.css';
 import { requestForToken, onMessageListener } from './firebase/fcm';
 import { Sheet } from 'react-modal-sheet';
@@ -45,7 +47,6 @@ function App() {
           </div>
         </nav>
 
-
         <Sheet
           isOpen={isSheetOpen}
           onClose={() => setIsSheetOpen(false)}
@@ -67,6 +68,13 @@ function App() {
                 >
                   Dashboard
                 </Link>
+                <Link
+                  to="/showcase"
+                  onClick={() => setIsSheetOpen(false)}
+                  className="modal-card"
+                >
+                  Showcase
+                </Link>
               </div>
             </Sheet.Content>
           </Sheet.Container>
@@ -79,6 +87,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/akun/:userId" element={<Akun />} />
+            <Route path="/showcase" element={<Showcase />} /> {/* Add this line */}
           </Routes>
           {notification.title && (
             <div className="notification-popup">

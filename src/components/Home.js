@@ -32,10 +32,16 @@ const Home = () => {
                 />
             </div>
 
-            {/* Title and description added here */}
             <div className="text-center">
                 <h2>Payment Gateway<br />Show your Skill & Produk</h2>
                 <p>An easy platform to sell your digital products, class, event, tipping and more. 🔥</p>
+                {/* Showcase Button */}
+                <button
+                    className="showcase-button"
+                    onClick={() => navigate('/showcase')}
+                >
+                    Showcase
+                </button>
             </div>
 
             <div className="image-container">

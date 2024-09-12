@@ -319,3 +319,22 @@ h4 {
 }
 
 
+/* Home.css */
+
+.showcase-button {
+    background-color: #6a0dad; /* Purple color */
+    color: white; /* White text */
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 16px; /* Space between the text and button */
+    display: block; /* Center the button */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.showcase-button:hover {
+    background-color: #5a0b9d; /* Slightly darker purple on hover */
+}

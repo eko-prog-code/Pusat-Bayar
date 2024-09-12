@@ -1,4 +1,5 @@
-import React, { createContext, useState, useEffect } from 'react';
+// UserContext.js
+import { useContext, createContext, useState, useEffect } from 'react';
 import { getAuth, updateProfile } from 'firebase/auth';
 import { ref, onValue } from 'firebase/database';
 import { database } from '../firebase/firebase'; // Adjust import as needed
@@ -9,7 +10,7 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState({});
   const [profilePicUrl, setProfilePicUrl] = useState('');
-  const [fullName, setFullName] = useState('');
+  const [fullName, setFullName] = useState('Anonymous');
 
   useEffect(() => {
     const auth = getAuth();
@@ -45,4 +46,9 @@ export const UserProvider = ({ children }) => {
       {children}
     </UserContext.Provider>
   );
+};
+
+// Custom hook to use UserContext
+export const useUser = () => {
+  return useContext(UserContext);
 };
