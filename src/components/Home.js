@@ -54,9 +54,16 @@ const Home = () => {
             </div>
 
             {auth.currentUser && (
-                <div className="profile-header">
-                    <h4>Hai {userData.fullName || 'User'}</h4> {/* Updated to fullName */}
-                    <p className='text-center'>Kelola Dashboard jasa, produk dan pelanggan Anda di Pusat Bayar!</p>
+                <div className="profile-header text-center">
+                    <h4>Hai {userData.fullName || 'User'}</h4>
+                    {userData.profilePicture && (
+                        <img
+                            src={userData.profilePicture}
+                            alt="Profile"
+                            className="profile-picture"
+                        />
+                    )}
+                    <p>Kelola Dashboard jasa, produk dan pelanggan Anda di Pusat Bayar!</p>
                 </div>
             )}
         </div>

@@ -16,7 +16,13 @@ const Login = () => {
     e.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        console.log('Logged in:', userCredential.user);
+        const user = userCredential.user;
+        console.log('Logged in:', user);
+
+        // Mengambil nama lengkap (fullName) dari displayName
+        const fullName = user.displayName;
+        console.log('Nama Lengkap:', fullName);
+
         setShowPopup(true); // Show the popup on successful login
         setTimeout(() => {
           navigate('/'); // Navigate to the home page after a delay

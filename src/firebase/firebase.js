@@ -26,7 +26,7 @@ const messaging = getMessaging(app);
 
 // Request FCM Token
 export const requestForToken = () => {
-  return getToken(messaging, { vapidKey: "PF359NPSKhpMsrJOszzf-D8PfJ3LkVScVmuz4dYznsKH3RanJH9aSoxhe5iXEK4gakmWSYsBPUpsoIA" })  // Replace with your VAPID key
+  return getToken(messaging, { vapidKey: "BHh7s7QHPF359NPSKhpMsrJOszzf-D8PfJ3LkVScVmuz4dYznsKH3RanJH9aSoxhe5iXEK4gakmWSYsBPUpsoIA" })  // Replace with your VAPID key
     .then((currentToken) => {
       if (currentToken) {
         console.log('Current token for client: ', currentToken);

@@ -24,6 +24,7 @@ const Akun = () => {
   const [paymentInfo, setPaymentInfo] = useState('');
   const [paymentDetails, setPaymentDetails] = useState('');
 
+  // Fetch user data and profile picture on component mount
   useEffect(() => {
     const database = getDatabase();
     const userRef = databaseRef(database, `users/${userId}`);
@@ -42,19 +43,28 @@ const Akun = () => {
         setError('Gagal mengambil data pengguna');
       });
 
-    const fetchProfilePic = async () => {
-      try {
-        const profilePicRef = storageRef(storage, `profilePictures/${userId}`);
+      // Fetch profile picture
+      const fetchProfilePic = async () => {
         try {
-          const url = await getDownloadURL(profilePicRef);
-          setProfilePicUrlState(url);
-        } catch (urlError) {
-          setProfilePicUrlState('');
+          // Pastikan userId sesuai dan pengguna sudah login
+          if (user && user.uid === userId) {
+            const profilePicRef = storageRef(storage, `profilePictures/${userId}`);
+            const url = await getDownloadURL(profilePicRef);
+            setProfilePicUrlState(url);
+          } else {
+            setProfilePicUrlState('/path/to/default/profile-pic.png'); // Placeholder jika tidak ada file
+          }
+        } catch (error) {
+          if (error.code === 'storage/object-not-found') {
+            setProfilePicUrlState('/path/to/default/profile-pic.png'); // Placeholder jika tidak ada file
+          } else if (error.code === 'storage/unauthorized') {
+            // Jika akses ditolak
+            console.error('Error: Unauthorized access to storage', error);
+          } else {
+            console.error('Error fetching profile picture:', error);
+          }
         }
-      } catch (error) {
-        console.error('Gagal mengambil foto profil:', error);
-      }
-    };
+      };      
 
     fetchProfilePic();
   }, [userId]);
@@ -144,7 +154,6 @@ const Akun = () => {
       alert('Nama pengguna tidak tersedia.');
     }
   };
-  
 
   return (
     <div className="akun-dashboard">

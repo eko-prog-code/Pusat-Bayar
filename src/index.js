@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client'; // Import createRoot from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom';  // Import BrowserRouter
 import './index.css';
 import App from './App';
@@ -17,13 +17,14 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-ReactDOM.render(
+// Create a root and render the app using createRoot
+const root = ReactDOM.createRoot(document.getElementById('root'));  // Use createRoot
+root.render(
   <React.StrictMode>
-    <BrowserRouter>  {/* Bungkus App dengan BrowserRouter */}
-      <UserProvider>  {/* Bungkus App dengan UserProvider */}
+    <BrowserRouter>  {/* Wrap App with BrowserRouter */}
+      <UserProvider>  {/* Wrap App with UserProvider */}
         <App />
       </UserProvider>
     </BrowserRouter>
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 );
