@@ -138,23 +138,6 @@ const Akun = () => {
     }
   };
 
-  const handleCopyProfileUrl = () => {
-    if (userData.fullName) {
-      const profileUrl = `${window.location.origin}/akun/${encodeURIComponent(userData.fullName)}`;
-      
-      navigator.clipboard.writeText(profileUrl)
-        .then(() => {
-          alert('URL profil berhasil disalin!');
-        })
-        .catch((error) => {
-          console.error('Gagal menyalin URL:', error);
-          alert('Gagal menyalin URL.');
-        });
-    } else {
-      alert('Nama pengguna tidak tersedia.');
-    }
-  };
-
   return (
     <div className="akun-dashboard">
       {/* Menu hamburger untuk mobile */}
@@ -201,9 +184,6 @@ const Akun = () => {
                 </div>
               )}
               <div className="profile-details">
-                <div className="share-icon" onClick={handleCopyProfileUrl}>
-                📤 Share Profile
-              </div>
                 <p><strong>Nama:</strong> {userData.fullName}</p>
                 <p><strong>Email:</strong> {userData.email}</p>
                 <p><strong>Nomor Telepon:</strong> {userData.phoneNumber}</p>
@@ -228,7 +208,7 @@ const Akun = () => {
                 </form>
               )}
               <hr className="divider" />
-              <MyProduk />
+              <MyProduk userId={userId} />
             </div>
           </div>
         )}

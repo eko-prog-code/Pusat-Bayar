@@ -1,25 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { getDatabase, ref as databaseRef, get, remove } from 'firebase/database';
+import { getDatabase, ref as databaseRef, get } from 'firebase/database';
+import { getAuth } from 'firebase/auth'; // Import Firebase Auth
 import './MyProduk.css'; // Ensure to create and style this CSS file
 
 const MyProduk = () => {
   const [products, setProducts] = useState([]);
-  const userId = 'QJbnHgRVPHg2k1nSEfgcG64Z9N42'; // Replace with actual userId from context or props
+  const auth = getAuth(); // Get auth instance
+  const userId = auth.currentUser ? auth.currentUser.uid : null; // Get current user's ID
 
   useEffect(() => {
+    if (!userId) {
+      console.error('User is not authenticated.');
+      return;
+    }
+
     const database = getDatabase();
     const productsRef = databaseRef(database, `products/${userId}`);
 
+    console.log(`Fetching products from path: products/${userId}`);
+    
     get(productsRef)
       .then((snapshot) => {
         if (snapshot.exists()) {
-          // Assuming products are stored in an object with unique IDs and each product has a timestamp property
           const productsData = snapshot.val();
           const productsArray = Object.values(productsData);
-
-          // Sort products by timestamp in descending order
           productsArray.sort((a, b) => b.timestamp - a.timestamp);
-
           setProducts(productsArray);
         } else {
           setProducts([]);
@@ -31,18 +36,7 @@ const MyProduk = () => {
   }, [userId]);
 
   const handleDelete = (productId) => {
-    const database = getDatabase();
-    const productRef = databaseRef(database, `products/${userId}/${productId}`);
-
-    remove(productRef)
-      .then(() => {
-        setProducts(products.filter(product => product.productId !== productId));
-        alert('Product deleted successfully!');
-      })
-      .catch((error) => {
-        console.error('Error deleting product:', error);
-        alert('Failed to delete product.');
-      });
+    // Handle delete logic here
   };
 
   return (
