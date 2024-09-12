@@ -264,18 +264,21 @@ h4 {
     margin-top: 10px;
 }
 
+/* General styling for images */
 .image-container {
     display: flex;
     justify-content: center;
-    gap: 60px; /* Spacing between the image items */
+    gap: 60px;
     margin: 20px 0;
     margin-top: 30px;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
 .image-item {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 120px; /* Set a default width for larger screens */
 }
 
 .feature-image {
@@ -291,7 +294,28 @@ h4 {
 .image-text {
     margin-top: 10px;
     font-size: 16px;
-    color: white; /* White text below the image */
+    color: white;
     text-align: center;
 }
+
+/* Media query for mobile devices */
+@media (max-width: 768px) {
+    .image-container {
+        gap: 30px; /* Reduce spacing between items on smaller screens */
+    }
+
+    .image-item {
+        width: 80px; /* Adjust the width for mobile devices */
+    }
+
+    .feature-image {
+        width: 70px; /* Adjust image size for mobile */
+        height: 70px; /* Maintain aspect ratio */
+    }
+
+    .image-text {
+        font-size: 14px; /* Smaller text size on mobile */
+    }
+}
+
 
