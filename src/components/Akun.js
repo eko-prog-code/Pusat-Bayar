@@ -1,67 +1,69 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import { storage } from '../firebase/firebase';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { getDatabase, ref as databaseRef, get, set } from 'firebase/database'; // Import set dari firebase/database
+import { getDatabase, ref as databaseRef, get, set } from 'firebase/database'; 
 import './Akun.css';
-import Product from './Product'; // Import komponen Product
-import EmailBlast from './EmailBlast'; // Import komponen EmailBlast
-import MyProduk from './MyProduk'; // Import komponen MyProduk
+import Product from './Product'; 
+import EmailBlast from './EmailBlast'; 
+import MyProduk from './MyProduk';
 
 const Akun = () => {
   const { userId } = useParams();
+  const navigate = useNavigate();
   const { user, setProfilePicUrl } = useContext(UserContext);
   const [userData, setUserData] = useState({});
   const [profilePicUrl, setProfilePicUrlState] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [error, setError] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('profile'); // Bagian default adalah 'profile'
+  const [activeSection, setActiveSection] = useState('profile'); 
 
-  // State untuk mengelola informasi pembayaran
   const [isPaymentFormVisible, setIsPaymentFormVisible] = useState(false);
   const [paymentInfo, setPaymentInfo] = useState('');
   const [paymentDetails, setPaymentDetails] = useState('');
 
   useEffect(() => {
     const database = getDatabase();
-    if (userId) {
-      // Mengambil data pengguna
-      const userRef = databaseRef(database, `users/${userId}`);
-      get(userRef)
-        .then((snapshot) => {
-          if (snapshot.exists()) {
-            const data = snapshot.val();
-            setUserData(data);
-            setPaymentInfo(data.paymentInfo || ''); // Mengatur paymentInfo dari data pengguna
-          } else {
-            setError('Data pengguna tidak ditemukan');
-          }
-        })
-        .catch((error) => {
-          console.error('Error mengambil data pengguna:', error);
-          setError('Gagal mengambil data pengguna');
-        });
-
-      // Mengambil foto profil
-      const fetchProfilePic = async () => {
-        try {
-          const profilePicRef = storageRef(storage, `profilePictures/${userId}`);
-          try {
-            const url = await getDownloadURL(profilePicRef);
-            setProfilePicUrlState(url);
-          } catch (urlError) {
-            setProfilePicUrlState('');
-          }
-        } catch (error) {
-          console.error('Gagal mengambil foto profil:', error);
+    const userRef = databaseRef(database, `users/${userId}`);
+    get(userRef)
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          setUserData(data);
+          setPaymentInfo(data.paymentInfo || ''); 
+        } else {
+          setError('Data pengguna tidak ditemukan');
         }
-      };
+      })
+      .catch((error) => {
+        console.error('Error mengambil data pengguna:', error);
+        setError('Gagal mengambil data pengguna');
+      });
 
-      fetchProfilePic();
-    }
+    const fetchProfilePic = async () => {
+      try {
+        const profilePicRef = storageRef(storage, `profilePictures/${userId}`);
+        try {
+          const url = await getDownloadURL(profilePicRef);
+          setProfilePicUrlState(url);
+        } catch (urlError) {
+          setProfilePicUrlState('');
+        }
+      } catch (error) {
+        console.error('Gagal mengambil foto profil:', error);
+      }
+    };
+
+    fetchProfilePic();
   }, [userId]);
+
+  useEffect(() => {
+    if (userData.fullName) {
+      navigate(`/akun/${userData.fullName}`);
+    }
+  }, [userData.fullName, navigate]);
 
   const handleFileChange = (e) => {
     if (e.target.files[0]) {
@@ -78,7 +80,6 @@ const Akun = () => {
         .then((url) => {
           setProfilePicUrlState(url);
   
-          // Perbarui URL gambar profil di Firebase Realtime Database
           const database = getDatabase();
           const userRef = databaseRef(database, `users/${userId}/profilePicture`);
           set(userRef, url)
@@ -89,7 +90,6 @@ const Akun = () => {
               console.error('Gagal memperbarui URL foto profil:', error);
             });
   
-          // Juga perbarui di konteks jika pengguna saat ini yang mengunggah foto
           if (user.uid === userId) {
             setProfilePicUrl(url);
           }
@@ -109,14 +109,12 @@ const Akun = () => {
     setActiveSection(section);
   };
 
-  // Handle Pengiriman Info Pembayaran
   const handlePaymentSubmit = (e) => {
     e.preventDefault();
     if (paymentDetails) {
       setPaymentInfo(paymentDetails);
       setIsPaymentFormVisible(false);
       
-      // Simpan informasi pembayaran ke Firebase Realtime Database
       const database = getDatabase();
       const paymentRef = databaseRef(database, `users/${userId}/paymentInfo`);
       set(paymentRef, paymentDetails)
@@ -129,6 +127,24 @@ const Akun = () => {
         });
     }
   };
+
+  const handleCopyProfileUrl = () => {
+    if (userData.fullName) {
+      const profileUrl = `${window.location.origin}/akun/${encodeURIComponent(userData.fullName)}`;
+      
+      navigator.clipboard.writeText(profileUrl)
+        .then(() => {
+          alert('URL profil berhasil disalin!');
+        })
+        .catch((error) => {
+          console.error('Gagal menyalin URL:', error);
+          alert('Gagal menyalin URL.');
+        });
+    } else {
+      alert('Nama pengguna tidak tersedia.');
+    }
+  };
+  
 
   return (
     <div className="akun-dashboard">
@@ -176,7 +192,9 @@ const Akun = () => {
                 </div>
               )}
               <div className="profile-details">
-                <h3>Data Pengguna:</h3>
+                <div className="share-icon" onClick={handleCopyProfileUrl}>
+                📤 Share Profile
+              </div>
                 <p><strong>Nama:</strong> {userData.fullName}</p>
                 <p><strong>Email:</strong> {userData.email}</p>
                 <p><strong>Nomor Telepon:</strong> {userData.phoneNumber}</p>
@@ -200,9 +218,7 @@ const Akun = () => {
                   <button type="submit">Kirim</button>
                 </form>
               )}
-              {/* Add the divider here */}
               <hr className="divider" />
-              {/* Import and render <MyProduk /> here */}
               <MyProduk />
             </div>
           </div>

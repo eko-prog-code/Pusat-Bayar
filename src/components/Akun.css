@@ -254,3 +254,7 @@ ul {
   background: #ffffff; /* white line */
   margin: 20px 0; /* margin to provide space around the line */
 }
+
+.share-icon {
+  cursor: pointer; /* This makes the cursor change to a hand icon on hover */
+}
