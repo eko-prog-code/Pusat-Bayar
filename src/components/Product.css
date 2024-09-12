@@ -1,0 +1,113 @@
+/* Title */
+  .produk-unix2024-container h2 {
+    text-align: center;
+    color: #fcfafa;
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  
+  /* Form Styles */
+  .produk-unix2024-form {
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+  }
+  
+  .produk-unix2024-form label {
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 8px;
+  }
+  
+  .produk-unix2024-form input[type="text"],
+  .produk-unix2024-form input[type="number"],
+  .produk-unix2024-form textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+  }
+  
+  .produk-unix2024-form input[type="text"]:focus,
+  .produk-unix2024-form input[type="number"]:focus,
+  .produk-unix2024-form textarea:focus {
+    border-color: #1e90ff;
+    outline: none;
+  }
+  
+  .produk-unix2024-form textarea {
+    resize: none;
+    height: 100px;
+  }
+  
+  .produk-unix2024-form input[type="file"] {
+    margin-bottom: 15px;
+    font-size: 16px;
+  }
+  
+  /* Button */
+  .produk-unix2024-submit-btn {
+    background-color: #1e90ff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .produk-unix2024-submit-btn:hover {
+    background-color: #187bcd;
+  }
+  
+  .produk-unix2024-submit-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  /* Loading Spinner */
+  .produk-unix2024-submit-btn[disabled]::after {
+    content: '';
+    border: 3px solid white;
+    border-top: 3px solid transparent;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    margin-left: 10px;
+    animation: produk-unix2024-spin 1s linear infinite;
+  }
+  
+  @keyframes produk-unix2024-spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .produk-unix2024-container {
+      padding: 20px;
+    }
+  
+    .produk-unix2024-form input[type="text"],
+    .produk-unix2024-form input[type="number"],
+    .produk-unix2024-form textarea {
+      font-size: 14px;
+    }
+  
+    .produk-unix2024-submit-btn {
+      padding: 10px;
+      font-size: 14px;
+    }
+  }
+  

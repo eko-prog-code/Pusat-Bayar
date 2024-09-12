@@ -38,11 +38,13 @@
 }
 
 /* General styles for the navbar */
+/* General styles for the navbar */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 16px;
+  position: relative; /* Ensure the position of menu button is correct */
 }
 
 .navbar-brand {
@@ -80,6 +82,14 @@
 .navbar-menu button:hover {
   background-color: #f01faa;
 }
+
+/* Button margin for mobile devices */
+@media (max-width: 768px) {
+  .navbar-menu {
+    top: 16px; /* Adjusted margin-top for mobile devices */
+  }
+}
+
 
 
 .modal-card-container {

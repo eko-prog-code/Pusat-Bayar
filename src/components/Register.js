@@ -8,7 +8,7 @@ import './Register.css';
 const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
+  const [fullName, setFullName] = useState(''); // Updated from 'name' to 'fullName'
   const [phoneNumber, setPhoneNumber] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -19,7 +19,7 @@ const Register = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        saveUserData(user.uid, name, email, phoneNumber, password);
+        saveUserData(user.uid, fullName, email, phoneNumber, password);
         alert('Berhasil mendaftar!'); // Show success message
         navigate('/'); // Redirect to /akun
       })
@@ -28,9 +28,9 @@ const Register = () => {
       });
   };
 
-  const saveUserData = (userId, name, email, phoneNumber, password) => {
+  const saveUserData = (userId, fullName, email, phoneNumber, password) => {
     set(ref(database, 'users/' + userId), {
-      name: name,
+      fullName: fullName, // Updated field to 'fullName'
       email: email,
       phoneNumber: phoneNumber,
       password: password // Saving the password (plaintext) - not recommended for production
@@ -47,9 +47,9 @@ const Register = () => {
       <form onSubmit={handleRegister}>
         <input
           type="text"
-          placeholder="Nama"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          placeholder="Nama Lengkap"
+          value={fullName} // Updated from 'name' to 'fullName'
+          onChange={(e) => setFullName(e.target.value)}
         />
         <input
           type="text"

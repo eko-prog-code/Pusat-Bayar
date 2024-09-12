@@ -55,7 +55,7 @@ const Home = () => {
 
             {auth.currentUser && (
                 <div className="profile-header">
-                    <h4>Hai {userData.name || 'User'}</h4>
+                    <h4>Hai {userData.fullName || 'User'}</h4> {/* Updated to fullName */}
                     <p className='text-center'>Kelola Dashboard jasa, produk dan pelanggan Anda di Pusat Bayar!</p>
                 </div>
             )}

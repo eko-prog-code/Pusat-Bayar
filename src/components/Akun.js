@@ -3,10 +3,11 @@ import { useParams } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import { storage } from '../firebase/firebase';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { getDatabase, ref as databaseRef, get, set } from 'firebase/database'; // Import set from firebase/database
+import { getDatabase, ref as databaseRef, get, set } from 'firebase/database'; // Import set dari firebase/database
 import './Akun.css';
-import Product from './Product';      // Import Product component
-import EmailBlast from './EmailBlast'; // Import EmailBlast component
+import Product from './Product'; // Import komponen Product
+import EmailBlast from './EmailBlast'; // Import komponen EmailBlast
+import MyProduk from './MyProduk'; // Import komponen MyProduk
 
 const Akun = () => {
   const { userId } = useParams();
@@ -16,9 +17,9 @@ const Akun = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [error, setError] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('profile'); // Default section is 'profile'
+  const [activeSection, setActiveSection] = useState('profile'); // Bagian default adalah 'profile'
 
-  // State for managing payment info
+  // State untuk mengelola informasi pembayaran
   const [isPaymentFormVisible, setIsPaymentFormVisible] = useState(false);
   const [paymentInfo, setPaymentInfo] = useState('');
   const [paymentDetails, setPaymentDetails] = useState('');
@@ -26,24 +27,24 @@ const Akun = () => {
   useEffect(() => {
     const database = getDatabase();
     if (userId) {
-      // Fetch user data
+      // Mengambil data pengguna
       const userRef = databaseRef(database, `users/${userId}`);
       get(userRef)
         .then((snapshot) => {
           if (snapshot.exists()) {
             const data = snapshot.val();
             setUserData(data);
-            setPaymentInfo(data.paymentInfo || ''); // Set paymentInfo from user data
+            setPaymentInfo(data.paymentInfo || ''); // Mengatur paymentInfo dari data pengguna
           } else {
-            setError('User data not found');
+            setError('Data pengguna tidak ditemukan');
           }
         })
         .catch((error) => {
-          console.error('Error fetching user data:', error);
-          setError('Failed to fetch user data');
+          console.error('Error mengambil data pengguna:', error);
+          setError('Gagal mengambil data pengguna');
         });
 
-      // Fetch profile picture
+      // Mengambil foto profil
       const fetchProfilePic = async () => {
         try {
           const profilePicRef = storageRef(storage, `profilePictures/${userId}`);
@@ -54,7 +55,7 @@ const Akun = () => {
             setProfilePicUrlState('');
           }
         } catch (error) {
-          console.error('Failed to fetch profile picture:', error);
+          console.error('Gagal mengambil foto profil:', error);
         }
       };
 
@@ -71,14 +72,27 @@ const Akun = () => {
   const handleUpload = () => {
     if (selectedFile && user) {
       const profilePicRef = storageRef(storage, `profilePictures/${userId}`);
+      
       uploadBytes(profilePicRef, selectedFile)
         .then(() => getDownloadURL(profilePicRef))
         .then((url) => {
           setProfilePicUrlState(url);
+  
+          // Perbarui URL gambar profil di Firebase Realtime Database
+          const database = getDatabase();
+          const userRef = databaseRef(database, `users/${userId}/profilePicture`);
+          set(userRef, url)
+            .then(() => {
+              alert('Foto profil berhasil diunggah!');
+            })
+            .catch((error) => {
+              console.error('Gagal memperbarui URL foto profil:', error);
+            });
+  
+          // Juga perbarui di konteks jika pengguna saat ini yang mengunggah foto
           if (user.uid === userId) {
             setProfilePicUrl(url);
           }
-          alert('Foto profil berhasil diunggah!');
         })
         .catch((error) => {
           console.error(error);
@@ -95,14 +109,14 @@ const Akun = () => {
     setActiveSection(section);
   };
 
-  // Handle Payment Info Submission
+  // Handle Pengiriman Info Pembayaran
   const handlePaymentSubmit = (e) => {
     e.preventDefault();
     if (paymentDetails) {
       setPaymentInfo(paymentDetails);
       setIsPaymentFormVisible(false);
       
-      // Save payment info to Firebase Realtime Database
+      // Simpan informasi pembayaran ke Firebase Realtime Database
       const database = getDatabase();
       const paymentRef = databaseRef(database, `users/${userId}/paymentInfo`);
       set(paymentRef, paymentDetails)
@@ -110,7 +124,7 @@ const Akun = () => {
           alert('Info pembayaran berhasil disimpan!');
         })
         .catch((error) => {
-          console.error('Failed to save payment info:', error);
+          console.error('Gagal menyimpan info pembayaran:', error);
           alert('Gagal menyimpan info pembayaran.');
         });
     }
@@ -118,7 +132,7 @@ const Akun = () => {
 
   return (
     <div className="akun-dashboard">
-      {/* Hamburger menu for mobile */}
+      {/* Menu hamburger untuk mobile */}
       <div className="hamburger-menu" onClick={toggleSidebar}>
         ☰
       </div>
@@ -131,7 +145,7 @@ const Akun = () => {
         <h2>Menu</h2>
         <ul>
           <li><a href="#profile" onClick={() => handleSectionChange('profile')}>Profil</a></li>
-          <li><a href="#product" onClick={() => handleSectionChange('product')}>Product</a></li>
+          <li><a href="#product" onClick={() => handleSectionChange('product')}>Buat Produk</a></li>
           <li><a href="#email-blast" onClick={() => handleSectionChange('email-blast')}>Email Blast</a></li>
         </ul>
       </div>
@@ -141,7 +155,7 @@ const Akun = () => {
         {activeSection === 'profile' && (
           <div id="profile" className="profile-container">
             <div className="profile-header">
-              <h2>Hai {userData.name || 'User'}</h2>
+              <h2>Hai {userData.fullName || 'Pengguna'}</h2>
             </div>
             <div className="profile-info">
               <div className="profile-picture-container">
@@ -163,7 +177,7 @@ const Akun = () => {
               )}
               <div className="profile-details">
                 <h3>Data Pengguna:</h3>
-                <p><strong>Nama:</strong> {userData.name}</p>
+                <p><strong>Nama:</strong> {userData.fullName}</p>
                 <p><strong>Email:</strong> {userData.email}</p>
                 <p><strong>Nomor Telepon:</strong> {userData.phoneNumber}</p>
                 {paymentInfo && <p><strong>Info Pembayaran:</strong> {paymentInfo}</p>}
@@ -171,7 +185,7 @@ const Akun = () => {
 
               {!isPaymentFormVisible && (
                 <button onClick={() => setIsPaymentFormVisible(true)}>
-                  {paymentInfo ? 'Ubah Info Payment' : 'Info Payment'}
+                  {paymentInfo ? 'Ubah Info Pembayaran' : 'Tambah Info Pembayaran'}
                 </button>
               )}
 
@@ -183,9 +197,13 @@ const Akun = () => {
                     value={paymentDetails}
                     onChange={(e) => setPaymentDetails(e.target.value)}
                   />
-                  <button type="submit">Submit</button>
+                  <button type="submit">Kirim</button>
                 </form>
               )}
+              {/* Add the divider here */}
+              <hr className="divider" />
+              {/* Import and render <MyProduk /> here */}
+              <MyProduk />
             </div>
           </div>
         )}
