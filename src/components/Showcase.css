@@ -173,13 +173,14 @@
 }
 
 .photo-akun-shocase24 {
-  width: 20px;
-  height: 20px;
+  width: 20%;
+  height: auto; /* Agar proporsi tetap terjaga */
   border-radius: 50%;
   border: 2px solid white;
   box-shadow: 0 0 5px blue;
-  margin-top: 4px; /* Tambahkan margin kecil di atas */
+  margin-top: 4px;
 }
+
 
 .profile-name {
   font-size: 24px;

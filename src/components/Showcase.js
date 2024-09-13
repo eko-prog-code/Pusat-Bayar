@@ -91,9 +91,9 @@ const Showcase = () => {
                 className="photo-akun-shocase24"
                 src={product.profilePicture || 'default-profile-url.jpg'}
                 alt={product.fullName || 'User'}
+                style={{ width: '24%', height: 'auto', borderRadius: '50%', border: '2px solid white', boxShadow: '0 0 5px blue', marginTop: '4px' }}
               />
             </div>
-
             <Link to={`/product/${product.productSlug}/${product.productId}`}>
               <button>View Details</button>
             </Link>
