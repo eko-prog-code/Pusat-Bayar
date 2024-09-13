@@ -258,3 +258,7 @@ ul {
 .share-icon {
   cursor: pointer; /* This makes the cursor change to a hand icon on hover */
 }
+
+.sidebar ul li {
+  margin-bottom: 16px;
+}
