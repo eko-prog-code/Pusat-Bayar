@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getDatabase, ref as databaseRef, get } from 'firebase/database';
+import { getDatabase, ref as databaseRef, get, remove } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 import './MyProduk.css'; // Ensure to create and style this CSS file
 
 const MyProduk = () => {
@@ -9,7 +8,6 @@ const MyProduk = () => {
   const [error, setError] = useState(null);
   const auth = getAuth();
   const userId = auth.currentUser ? auth.currentUser.uid : null;
-  const navigate = useNavigate(); // Initialize useNavigate hook
 
   useEffect(() => {
     if (!userId) {
@@ -21,8 +19,6 @@ const MyProduk = () => {
     const database = getDatabase();
     const productsRef = databaseRef(database, `products/${userId}`);
 
-    console.log(`Fetching products from path: products/${userId}`);
-    
     get(productsRef)
       .then((snapshot) => {
         if (snapshot.exists()) {
@@ -43,12 +39,19 @@ const MyProduk = () => {
       });
   }, [userId]);
 
-  const handleProductClick = (fullName, productName) => {
-    navigate(`/${fullName}/${productName}`);
-  };
-
   const handleDelete = (productId) => {
-    // Handle delete logic here
+    const database = getDatabase();
+    const productRef = databaseRef(database, `products/${userId}/${productId}`);
+
+    remove(productRef)
+      .then(() => {
+        setProducts(products.filter((product) => product.productId !== productId));
+        alert('Produk berhasil dihapus!');
+      })
+      .catch((error) => {
+        console.error('Error deleting product:', error);
+        alert('Gagal menghapus produk.');
+      });
   };
 
   return (
@@ -69,12 +72,6 @@ const MyProduk = () => {
             <p>{product.productDescription}</p>
             <p>Harga: {product.productPrice}</p>
             <p>Tanggal Posting: {new Date(product.timestamp).toLocaleDateString()}</p>
-            <button
-              className="view-button"
-              onClick={() => handleProductClick(userId, product.productName)}
-            >
-              View Details
-            </button>
           </li>
         ))}
       </ul>

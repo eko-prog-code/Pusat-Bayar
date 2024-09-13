@@ -6,7 +6,7 @@ import { UserContext } from '../context/UserContext';
 import './Product.css';
 
 const Product = () => {
-  const { user, fullName, profilePicUrl } = useContext(UserContext); // Destructure fullName and profilePicUrl
+  const { user, fullName, profilePicUrl } = useContext(UserContext); 
   const [productName, setProductName] = useState('');
   const [productImage, setProductImage] = useState(null);
   const [productDescription, setProductDescription] = useState('');
@@ -27,6 +27,11 @@ const Product = () => {
     setProductPrice(formatPrice(productPrice));
   };
 
+  // Fungsi untuk membuat slug
+  const generateSlug = (text) => {
+    return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -44,6 +49,9 @@ const Product = () => {
       productImageUrl = await getDownloadURL(imageRef);
     }
 
+    // Generate slug
+    const productSlug = generateSlug(productName);
+
     const database = getDatabase();
     const productRef = databaseRef(database, `products/${user.uid}`);
     const newProductRef = push(productRef);
@@ -51,13 +59,14 @@ const Product = () => {
     const productData = {
       productId: newProductRef.key,
       productName,
+      productSlug, // Simpan slug di database
       productImageUrl,
       productDescription,
       productPrice,
       userId: user.uid,
       fullName: fullName || 'Anonymous',
       profilePicture: profilePicUrl || '',
-      timestamp: Date.now() // Add timestamp here
+      timestamp: Date.now()
     };
 
     await set(newProductRef, productData);

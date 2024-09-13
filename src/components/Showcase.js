@@ -10,45 +10,76 @@ const Showcase = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const productsRef = ref(database, 'products/Tr4alEKv4aVdzMjzMwME8MzHtsD3');
-    const unsubscribe = onValue(productsRef, snapshot => {
-      const productsData = snapshot.val();
-      if (productsData) {
-        const productsList = Object.values(productsData);
-        setProducts(productsList);
-      } else {
-        setProducts([]);
-        console.log('No products data found.');
+    const productsRef = ref(database, 'products');
+    const unsubscribe = onValue(
+      productsRef,
+      (snapshot) => {
+        const productsData = snapshot.val();
+        if (productsData) {
+          const productsList = Object.keys(productsData).map(key => {
+            const productEntries = productsData[key];
+            return Object.values(productEntries);
+          }).flat();
+
+          const validProducts = productsList.filter(
+            (product) => product.productName && product.productId && product.productPrice
+          );
+
+          if (validProducts.length > 0) {
+            setProducts(validProducts);
+          } else {
+            setProducts([]);
+          }
+        } else {
+          setProducts([]);
+        }
+        setLoading(false);
+      },
+      (error) => {
+        setError(error.message);
       }
-      setLoading(false);
-    }, (error) => {
-      setError(error.message);
-      console.error('Error fetching products:', error);
-    });
+    );
 
     return () => unsubscribe();
   }, []);
-
-  const generateSlug = (text) => {
-    return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="showcase">
-      {products.map(product => (
-        <div key={product.productId} className="product-card">
-          <img src={product.productImageUrl} alt={product.productName} />
-          <h2>{product.productName}</h2>
-          <p>{product.productDescription}</p>
-          <p>Price: ${product.productPrice}</p>
-          <Link to={`/product/${generateSlug(product.fullName)}/${product.productId}`}>
-            View Details
-          </Link>
-        </div>
-      ))}
+      {products.length > 0 ? (
+        products.map((product) => (
+          <div key={product.productId} className="product-card">
+            <img
+              src={product.productImageUrl || 'default-image-url.jpg'}
+              alt={product.productName}
+            />
+            <h2>{product.productName}</h2>
+            <p>{product.productDescription || 'No description available.'}</p>
+            <p>Price: Rp{product.productPrice}</p>
+
+            {/* Divider abu-abu */}
+            <hr className="divider" />
+
+            {/* Tambahkan nama dan foto profil */}
+            <div className="profile-container">
+              <span className="profile-name">{product.fullName || 'Anonymous'}</span>
+              <img
+                className="photo-akun-shocase24"
+                src={product.profilePicture || 'default-profile-url.jpg'}
+                alt={product.fullName || 'User'}
+              />
+            </div>
+
+            <Link to={`/product/${product.productSlug}/${product.productId}`}>
+              <button>View Details</button>
+            </Link>
+          </div>
+        ))
+      ) : (
+        <p>No valid products available.</p>
+      )}
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { ref, get } from 'firebase/database';
-import { database } from '../firebase/firebase';
+import { ref, onValue } from 'firebase/database';
+import { database } from '../firebase/firebase'; // pastikan path ini sesuai dengan konfigurasi firebase Anda
 import './ProductDetail.css';
 
 const ProductDetail = () => {
@@ -11,41 +11,49 @@ const ProductDetail = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const userId = "Tr4alEKv4aVdzMjzMwME8MzHtsD3"; // Replace with dynamic user ID if needed
-        const productsRef = ref(database, `products/${userId}`);
-        const snapshot = await get(productsRef);
-        
+    const productsRef = ref(database, 'products');
+    const unsubscribe = onValue(
+      productsRef,
+      (snapshot) => {
         if (snapshot.exists()) {
           const productsData = snapshot.val();
+
           let foundProduct = null;
 
-          for (let id in productsData) {
-            if (productsData[id].productId === productId && generateSlug(productsData[id].fullName) === slug) {
-              foundProduct = productsData[id];
-              break;
+          for (const userId in productsData) {
+            const userProducts = productsData[userId];
+            for (const key in userProducts) {
+              const product = userProducts[key];
+              if (product.productId === productId && product.productSlug === slug) {
+                foundProduct = product;
+                break;
+              }
             }
           }
 
-          setProduct(foundProduct);
+          setProduct(foundProduct || null);
         } else {
           setProduct(null);
-          console.log(`No product found at this path: ${productId}`);
         }
-      } catch (err) {
-        setError(err.message);
-        console.error(`Error fetching product with ID: ${productId}`, err);
-      } finally {
+        setLoading(false);
+      },
+      (error) => {
+        setError(error.message);
         setLoading(false);
       }
-    };
+    );
 
-    fetchProduct();
+    return () => unsubscribe();
   }, [productId, slug]);
 
-  const generateSlug = (text) => {
-    return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href);
+    alert('Domain copied to clipboard!');
+  };
+
+  const handleCopyAccountNumber = () => {
+    navigator.clipboard.writeText('1730007993125');
+    alert('Nomor rekening berhasil disalin!');
   };
 
   if (loading) return <div>Loading...</div>;
@@ -53,12 +61,40 @@ const ProductDetail = () => {
   if (!product) return <div>No product found.</div>;
 
   return (
-    <div className="product-detail">
+    <div className="product-detail unix-424">
+      <div className="profile unix-424-profile">
+        <img
+          className="profile-image-detail unix-424-profile-image"
+          src={product.profilePicture || 'default-profile-url.jpg'}
+          alt="Profile"
+        />
+        <span className="full-name unix-424-full-name">{product.fullName}</span>
+      </div>
       <h1>{product.productName}</h1>
       <p>{product.productDescription}</p>
-      <p>Price: ${product.productPrice}</p>
-      <img src={product.productImageUrl} alt={product.productName} />
-      {/* Add other product details here */}
+      <p>Price: {product.productPrice}</p>
+      <img
+        src={product.productImageUrl || 'https://via.placeholder.com/150'}
+        alt={product.productName}
+      />
+      <button className="share-button unix-424-share-button" onClick={handleShare}>
+        Share 🔗
+      </button>
+
+      {/* Divider */}
+      <hr style={{ borderTop: '3px solid blue', margin: '20px 0' }} />
+
+      {/* Transfer Information */}
+      <div className="transfer-info">
+        <p><strong>Pembelian transfer ke:</strong></p>
+        <p>Nama: Eko Setiaji</p>
+        <p>Bank: Mandiri</p>
+        <p>No.Rekening Bank: 1730007993125</p>
+        <p>PT. InnoView Indo Tech: MedicTech, Pusat Bayar, E-Book Store, Sell Your Songs, dll</p>
+        <button className="copy-button" onClick={handleCopyAccountNumber}>
+          📋 Salin Nomor Rekening Bank
+        </button>
+      </div>
     </div>
   );
 };

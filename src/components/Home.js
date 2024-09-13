@@ -66,7 +66,7 @@ const Home = () => {
                         <img
                             src={userData.profilePicture}
                             alt="Profile"
-                            className="profile-picture"
+                            className="profile-picture-home"
                         />
                     )}
                     <p>Kelola Dashboard jasa, produk dan pelanggan Anda di Pusat Bayar!</p>

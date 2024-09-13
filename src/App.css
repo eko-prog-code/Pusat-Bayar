@@ -53,7 +53,8 @@
 }
 
 .navbar-logo {
-  height: 40px;
+  height: 60px;
+  width: 60px;
   margin-right: 8px; /* Adds 8px space between logo and text */
 }
 
@@ -67,7 +68,7 @@
 .navbar-menu {
   position: absolute;
   right: 16px;
-  top: 16px;
+  top: 34px;
 }
 
 .navbar-menu button {
@@ -86,7 +87,8 @@
 /* Button margin for mobile devices */
 @media (max-width: 768px) {
   .navbar-menu {
-    top: 16px; /* Adjusted margin-top for mobile devices */
+    top: 46px; /* Adjusted margin-top for mobile devices */
+    height: 20px;
   }
 }
 

@@ -338,3 +338,12 @@ h4 {
 .showcase-button:hover {
     background-color: #5a0b9d; /* Slightly darker purple on hover */
 }
+
+.profile-picture-home {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%; /* Membuat gambar berbentuk lingkaran */
+    object-fit: cover; /* Memastikan gambar tidak terdistorsi */
+    border: 2px solid #ddd; /* Border abu-abu lembut di sekitar gambar */
+    margin-bottom: 15px; /* Jarak antara gambar dan teks */
+  }

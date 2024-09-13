@@ -5,9 +5,9 @@ import { storage } from '../firebase/firebase';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getDatabase, ref as databaseRef, get, set } from 'firebase/database';
 import './Akun.css';
-import Product from './Product';
+import MyProduk from './MyProduk'; // Import MyProduk component
+import Product from './Product'; // Assuming you have a Product component
 import EmailBlast from './EmailBlast';
-import MyProduk from './MyProduk';
 
 const Akun = () => {
   const { userId } = useParams();
@@ -19,7 +19,6 @@ const Akun = () => {
   const [error, setError] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('profile');
-  
   const [isPaymentFormVisible, setIsPaymentFormVisible] = useState(false);
   const [paymentInfo, setPaymentInfo] = useState('');
   const [paymentDetails, setPaymentDetails] = useState('');
@@ -85,12 +84,12 @@ const Akun = () => {
   const handleUpload = (file) => {
     if (file && user) {
       const profilePicRef = storageRef(storage, `profilePictures/${user.uid}`); // Use user.uid
-  
+
       uploadBytes(profilePicRef, file)
         .then(() => getDownloadURL(profilePicRef))
         .then((url) => {
           setProfilePicUrlState(url);
-  
+
           const database = getDatabase();
           const userRef = databaseRef(database, `users/${user.uid}/profilePicture`);
           set(userRef, url)
@@ -100,7 +99,7 @@ const Akun = () => {
             .catch((error) => {
               console.error('Gagal memperbarui URL foto profil:', error);
             });
-  
+
           setProfilePicUrl(url);
         })
         .catch((error) => {
@@ -111,7 +110,7 @@ const Akun = () => {
       console.error("Pengguna belum login atau file tidak ada.");
     }
   };
-  
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -127,7 +126,6 @@ const Akun = () => {
       setIsPaymentFormVisible(false);
 
       const database = getDatabase();
-      // Update payment info for the authenticated user
       const paymentRef = databaseRef(database, `users/${user.uid}/paymentInfo`);
 
       set(paymentRef, paymentDetails)
@@ -142,7 +140,6 @@ const Akun = () => {
   };
 
   const handleProfilePictureClick = () => {
-    // Trigger file input when profile picture is clicked
     fileInputRef.current.click();
   };
 
@@ -161,7 +158,8 @@ const Akun = () => {
         <h2>Menu</h2>
         <ul>
           <li><a href="#profile" onClick={() => handleSectionChange('profile')}>Profil</a></li>
-          <li><a href="#product" onClick={() => handleSectionChange('product')}>Buat Produk</a></li>
+          <li><a href="#make-product" onClick={() => handleSectionChange('make-product')}>Buat Produk</a></li>
+          <li><a href="#my-products" onClick={() => handleSectionChange('my-products')}>Produk Saya</a></li>
           <li><a href="#email-blast" onClick={() => handleSectionChange('email-blast')}>Email Blast</a></li>
         </ul>
       </div>
@@ -179,18 +177,20 @@ const Akun = () => {
                   <img
                     src={profilePicUrl}
                     alt="Profile"
-                    className="profile-picture"
+                    className="profile-picture-akun"
                   />
                 ) : (
                   <div className="profile-picture-placeholder">Foto Profil</div>
                 )}
               </div>
-              <input
-                type="file"
-                ref={fileInputRef}
-                style={{ display: 'none' }}
-                onChange={handleFileChange}
-              />
+              {user && (
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  style={{ display: 'none' }}
+                  onChange={handleFileChange}
+                />
+              )}
               <div className="profile-details">
                 <p><strong>Nama:</strong> {userData.fullName}</p>
                 <p><strong>Email:</strong> {userData.email}</p>
@@ -198,40 +198,41 @@ const Akun = () => {
                 {paymentInfo && <p><strong>Info Pembayaran:</strong> {paymentInfo}</p>}
               </div>
 
-              {!isPaymentFormVisible && (
+              {user && !isPaymentFormVisible && (
                 <button onClick={() => setIsPaymentFormVisible(true)}>
                   {paymentInfo ? 'Ubah Info Pembayaran' : 'Tambah Info Pembayaran'}
                 </button>
               )}
 
-              {isPaymentFormVisible && (
-                <form onSubmit={handlePaymentSubmit} className="unix-929-payment-form-container">
+              {user && isPaymentFormVisible && (
+                <form onSubmit={handlePaymentSubmit} className="payment-form-container">
                   <input
                     type="text"
                     placeholder="Nama/Bank/No.Rekening"
                     value={paymentDetails}
                     onChange={(e) => setPaymentDetails(e.target.value)}
                   />
-                  <button type="submit">Kirim</button>
+                  <button type="submit">Simpan</button>
+                  <button type="button" onClick={() => setIsPaymentFormVisible(false)}>Batal</button>
                 </form>
               )}
-              <hr className="divider" />
-              <MyProduk fullName={userData.fullName} /> {/* Pass fullName as prop */}
             </div>
           </div>
         )}
 
-        {activeSection === 'product' && (
-          <div id="product">
+        {activeSection === 'make-product' && (
+          <div id="make-product">
             <Product />
           </div>
         )}
 
-        {activeSection === 'email-blast' && (
-          <div id="email-blast">
-            <EmailBlast />
+        {activeSection === 'my-products' && (
+          <div id="my-products">
+            <MyProduk />
           </div>
         )}
+
+        {activeSection === 'email-blast' && <EmailBlast />}
       </div>
     </div>
   );

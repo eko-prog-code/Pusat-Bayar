@@ -1,21 +1,20 @@
 // App.js
 import React, { useState, useEffect, useContext } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from 'react-router-dom';
+import { Route, Routes, Link } from 'react-router-dom';
 import Home from './components/Home';
 import Login from './components/Login';
 import Register from './components/Register';
 import Akun from './components/Akun';
 import Showcase from './components/Showcase'; // Import the Showcase component
+import ProductDetail from './components/ProductDetail';
 import './App.css';
 import { requestForToken, onMessageListener } from './firebase/fcm';
 import { Sheet } from 'react-modal-sheet';
 import { UserProvider, UserContext } from './context/UserContext';
-import ProductDetail from './components/ProductDetail';
 
 function App() {
   const [notification, setNotification] = useState({ title: '', body: '' });
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const navigate = useNavigate();
   const { user } = useContext(UserContext);
 
   useEffect(() => {
@@ -88,10 +87,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/akun/:userId" element={<Akun />} />
-            <Route path="/showcase" element={<Showcase />} /> {/* Add this line */}
-            <Route path="/product/:slug/:productId" element={<ProductDetail />} />
-
-            {/* Add wildcard route to catch undefined paths */}
+            <Route path="/showcase" element={<Showcase />} />
+            <Route path="/product/:slug/:productId" element={<ProductDetail />} /> 
             <Route path="*" element={<h2>404: Page Not Found</h2>} />
           </Routes>
           {notification.title && (
