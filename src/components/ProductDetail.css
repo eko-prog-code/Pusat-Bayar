@@ -1,0 +1,64 @@
+/* Base styles for the product detail page */
+.product-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+  background: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-detail h1 {
+  font-size: 2.5em;
+  margin: 0 0 20px;
+  color: #333;
+  text-align: center;
+}
+
+.product-detail p {
+  font-size: 1.2em;
+  margin: 10px 0;
+  color: #555;
+}
+
+.product-detail img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+}
+
+/* Price styling */
+.product-detail .price {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #e94e77;
+  margin: 20px 0;
+}
+
+/* Loading and error states */
+.product-detail .loading,
+.product-detail .error {
+  font-size: 1.2em;
+  color: #e94e77;
+  text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .product-detail {
+    padding: 15px;
+  }
+
+  .product-detail h1 {
+    font-size: 2em;
+  }
+
+  .product-detail p {
+    font-size: 1em;
+  }
+}

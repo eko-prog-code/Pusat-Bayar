@@ -1,6 +1,6 @@
 // App.js
 import React, { useState, useEffect, useContext } from 'react';
-import { Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from 'react-router-dom';
 import Home from './components/Home';
 import Login from './components/Login';
 import Register from './components/Register';
@@ -10,6 +10,7 @@ import './App.css';
 import { requestForToken, onMessageListener } from './firebase/fcm';
 import { Sheet } from 'react-modal-sheet';
 import { UserProvider, UserContext } from './context/UserContext';
+import ProductDetail from './components/ProductDetail';
 
 function App() {
   const [notification, setNotification] = useState({ title: '', body: '' });
@@ -88,6 +89,10 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/akun/:userId" element={<Akun />} />
             <Route path="/showcase" element={<Showcase />} /> {/* Add this line */}
+            <Route path="/product/:slug/:productId" element={<ProductDetail />} />
+
+            {/* Add wildcard route to catch undefined paths */}
+            <Route path="*" element={<h2>404: Page Not Found</h2>} />
           </Routes>
           {notification.title && (
             <div className="notification-popup">

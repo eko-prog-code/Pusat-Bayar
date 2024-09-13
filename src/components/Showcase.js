@@ -1,75 +1,54 @@
-// Showcase.js
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useUser } from '../context/UserContext'; // Ensure this path is correct
+import { Link } from 'react-router-dom';
 import { ref, onValue } from 'firebase/database';
-import { database } from '../firebase/firebase'; // Adjust import as needed
-import './Showcase.css'; // Import the CSS file
+import { database } from '../firebase/firebase';
+import './Showcase.css';
 
 const Showcase = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { user } = useUser(); // Use the custom hook here
-  const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user) {
-      navigate('/login');
-      return;
-    }
-
-    const productsRef = ref(database, 'products');
+    const productsRef = ref(database, 'products/Tr4alEKv4aVdzMjzMwME8MzHtsD3');
     const unsubscribe = onValue(productsRef, snapshot => {
       const productsData = snapshot.val();
-      console.log('Products data:', productsData); // Debugging: Check if data is fetched
       if (productsData) {
-        const productsList = [];
-        for (let id in productsData) {
-          for (let subId in productsData[id]) {
-            productsList.push(productsData[id][subId]);
-          }
-        }
+        const productsList = Object.values(productsData);
         setProducts(productsList);
       } else {
+        setProducts([]);
         console.log('No products data found.');
       }
       setLoading(false);
     }, (error) => {
-      console.error('Error fetching products:', error); // Handle errors
-      setError('Failed to load products. Please check your permissions.');
-      setLoading(false); // Stop loading on error
+      setError(error.message);
+      console.error('Error fetching products:', error);
     });
 
-    // Cleanup function
-    return () => unsubscribe(); 
+    return () => unsubscribe();
+  }, []);
 
-  }, [user, navigate]);
+  const generateSlug = (text) => {
+    return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="showcase">
-      <h1>Product Showcase</h1>
-      <div className="product-grid">
-        {products.length > 0 ? (
-          products.map((product, index) => (
-            <div key={index} className="product-card">
-              <img src={product.productImageUrl} alt={product.productName} />
-              <h2>{product.productName}</h2>
-              <p>{product.productDescription}</p>
-              <p>Price: {product.productPrice}</p>
-              <div className="profile">
-                <img src={product.profilePicture} alt={product.fullName} />
-                <p>{product.fullName}</p>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p>No products available.</p>
-        )}
-      </div>
+      {products.map(product => (
+        <div key={product.productId} className="product-card">
+          <img src={product.productImageUrl} alt={product.productName} />
+          <h2>{product.productName}</h2>
+          <p>{product.productDescription}</p>
+          <p>Price: ${product.productPrice}</p>
+          <Link to={`/product/${generateSlug(product.fullName)}/${product.productId}`}>
+            View Details
+          </Link>
+        </div>
+      ))}
     </div>
   );
 };

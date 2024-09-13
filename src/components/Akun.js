@@ -1,12 +1,12 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import { storage } from '../firebase/firebase';
 import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { getDatabase, ref as databaseRef, get, set } from 'firebase/database'; 
+import { getDatabase, ref as databaseRef, get, set } from 'firebase/database';
 import './Akun.css';
-import Product from './Product'; 
-import EmailBlast from './EmailBlast'; 
+import Product from './Product';
+import EmailBlast from './EmailBlast';
 import MyProduk from './MyProduk';
 
 const Akun = () => {
@@ -18,11 +18,14 @@ const Akun = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [error, setError] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('profile'); 
-
+  const [activeSection, setActiveSection] = useState('profile');
+  
   const [isPaymentFormVisible, setIsPaymentFormVisible] = useState(false);
   const [paymentInfo, setPaymentInfo] = useState('');
   const [paymentDetails, setPaymentDetails] = useState('');
+
+  // Ref for file input
+  const fileInputRef = useRef(null);
 
   // Fetch user data and profile picture on component mount
   useEffect(() => {
@@ -33,7 +36,7 @@ const Akun = () => {
         if (snapshot.exists()) {
           const data = snapshot.val();
           setUserData(data);
-          setPaymentInfo(data.paymentInfo || ''); 
+          setPaymentInfo(data.paymentInfo || ''); // Set paymentInfo if exists
         } else {
           setError('Data pengguna tidak ditemukan');
         }
@@ -43,32 +46,29 @@ const Akun = () => {
         setError('Gagal mengambil data pengguna');
       });
 
-      // Fetch profile picture
-      const fetchProfilePic = async () => {
-        try {
-          // Pastikan userId sesuai dan pengguna sudah login
-          if (user && user.uid === userId) {
-            const profilePicRef = storageRef(storage, `profilePictures/${userId}`);
-            const url = await getDownloadURL(profilePicRef);
-            setProfilePicUrlState(url);
-          } else {
-            setProfilePicUrlState('/path/to/default/profile-pic.png'); // Placeholder jika tidak ada file
-          }
-        } catch (error) {
-          if (error.code === 'storage/object-not-found') {
-            setProfilePicUrlState('/path/to/default/profile-pic.png'); // Placeholder jika tidak ada file
-          } else if (error.code === 'storage/unauthorized') {
-            // Jika akses ditolak
-            console.error('Error: Unauthorized access to storage', error);
-          } else {
-            console.error('Error fetching profile picture:', error);
-          }
+    // Fetch profile picture
+    const fetchProfilePic = async () => {
+      try {
+        if (user && user.uid === userId) {
+          const profilePicRef = storageRef(storage, `profilePictures/${userId}`);
+          const url = await getDownloadURL(profilePicRef);
+          setProfilePicUrlState(url);
+        } else {
+          setProfilePicUrlState('/path/to/default/profile-pic.png'); // Placeholder if no file
         }
-      };      
+      } catch (error) {
+        if (error.code === 'storage/object-not-found') {
+          setProfilePicUrlState('/path/to/default/profile-pic.png'); // Placeholder if no file
+        } else {
+          console.error('Error fetching profile picture:', error);
+        }
+      }
+    };
 
     fetchProfilePic();
-  }, [userId]);
+  }, [userId, user]);
 
+  // Redirect if fullName exists
   useEffect(() => {
     if (userData.fullName) {
       navigate(`/akun/${userData.fullName}`);
@@ -78,20 +78,21 @@ const Akun = () => {
   const handleFileChange = (e) => {
     if (e.target.files[0]) {
       setSelectedFile(e.target.files[0]);
+      handleUpload(e.target.files[0]);
     }
   };
 
-  const handleUpload = () => {
-    if (selectedFile && user) {
-      const profilePicRef = storageRef(storage, `profilePictures/${userId}`);
-      
-      uploadBytes(profilePicRef, selectedFile)
+  const handleUpload = (file) => {
+    if (file && user) {
+      const profilePicRef = storageRef(storage, `profilePictures/${user.uid}`); // Use user.uid
+  
+      uploadBytes(profilePicRef, file)
         .then(() => getDownloadURL(profilePicRef))
         .then((url) => {
           setProfilePicUrlState(url);
   
           const database = getDatabase();
-          const userRef = databaseRef(database, `users/${userId}/profilePicture`);
+          const userRef = databaseRef(database, `users/${user.uid}/profilePicture`);
           set(userRef, url)
             .then(() => {
               alert('Foto profil berhasil diunggah!');
@@ -100,17 +101,17 @@ const Akun = () => {
               console.error('Gagal memperbarui URL foto profil:', error);
             });
   
-          if (user.uid === userId) {
-            setProfilePicUrl(url);
-          }
+          setProfilePicUrl(url);
         })
         .catch((error) => {
           console.error(error);
           alert('Gagal mengunggah foto profil.');
         });
+    } else {
+      console.error("Pengguna belum login atau file tidak ada.");
     }
   };
-
+  
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -124,9 +125,11 @@ const Akun = () => {
     if (paymentDetails) {
       setPaymentInfo(paymentDetails);
       setIsPaymentFormVisible(false);
-      
+
       const database = getDatabase();
-      const paymentRef = databaseRef(database, `users/${userId}/paymentInfo`);
+      // Update payment info for the authenticated user
+      const paymentRef = databaseRef(database, `users/${user.uid}/paymentInfo`);
+
       set(paymentRef, paymentDetails)
         .then(() => {
           alert('Info pembayaran berhasil disimpan!');
@@ -138,9 +141,14 @@ const Akun = () => {
     }
   };
 
+  const handleProfilePictureClick = () => {
+    // Trigger file input when profile picture is clicked
+    fileInputRef.current.click();
+  };
+
   return (
     <div className="akun-dashboard">
-      {/* Menu hamburger untuk mobile */}
+      {/* Hamburger menu for mobile */}
       <div className="hamburger-menu" onClick={toggleSidebar}>
         ☰
       </div>
@@ -158,7 +166,7 @@ const Akun = () => {
         </ul>
       </div>
 
-      {/* Konten utama */}
+      {/* Main content */}
       <div className={`main-content ${isSidebarOpen ? 'with-sidebar' : ''}`}>
         {activeSection === 'profile' && (
           <div id="profile" className="profile-container">
@@ -166,7 +174,7 @@ const Akun = () => {
               <h2>Hai {userData.fullName || 'Pengguna'}</h2>
             </div>
             <div className="profile-info">
-              <div className="profile-picture-container">
+              <div className="profile-picture-container" onClick={handleProfilePictureClick}>
                 {profilePicUrl ? (
                   <img
                     src={profilePicUrl}
@@ -177,12 +185,12 @@ const Akun = () => {
                   <div className="profile-picture-placeholder">Foto Profil</div>
                 )}
               </div>
-              {user && user.uid === userId && (
-                <div>
-                  <input type="file" onChange={handleFileChange} />
-                  <button onClick={handleUpload}>Unggah Foto Profil</button>
-                </div>
-              )}
+              <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: 'none' }}
+                onChange={handleFileChange}
+              />
               <div className="profile-details">
                 <p><strong>Nama:</strong> {userData.fullName}</p>
                 <p><strong>Email:</strong> {userData.email}</p>
@@ -208,7 +216,7 @@ const Akun = () => {
                 </form>
               )}
               <hr className="divider" />
-              <MyProduk userId={userId} />
+              <MyProduk fullName={userData.fullName} /> {/* Pass fullName as prop */}
             </div>
           </div>
         )}
