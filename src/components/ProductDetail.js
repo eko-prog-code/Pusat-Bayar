@@ -78,7 +78,7 @@ const ProductDetail = () => {
         alt={product.productName}
       />
       <button className="share-button unix-424-share-button" onClick={handleShare}>
-        Share 🔗
+        Share 📤
       </button>
 
       {/* Divider */}
