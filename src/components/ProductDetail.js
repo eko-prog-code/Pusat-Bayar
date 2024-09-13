@@ -72,7 +72,7 @@ const ProductDetail = () => {
       </div>
       <h1>{product.productName}</h1>
       <p>{product.productDescription}</p>
-      <p>Price: {product.productPrice}</p>
+      <p>Price: Rp{product.productPrice}</p>
       <img
         src={product.productImageUrl || 'https://via.placeholder.com/150'}
         alt={product.productName}
