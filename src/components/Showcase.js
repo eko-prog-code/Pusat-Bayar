@@ -8,6 +8,8 @@ const Showcase = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState(''); // New state for search
+  const [isSearchVisible, setIsSearchVisible] = useState(false); // Toggle search bar visibility
 
   useEffect(() => {
     const productsRef = ref(database, 'products');
@@ -16,7 +18,7 @@ const Showcase = () => {
       (snapshot) => {
         const productsData = snapshot.val();
         if (productsData) {
-          const productsList = Object.keys(productsData).map(key => {
+          const productsList = Object.keys(productsData).map((key) => {
             const productEntries = productsData[key];
             return Object.values(productEntries);
           }).flat();
@@ -25,11 +27,7 @@ const Showcase = () => {
             (product) => product.productName && product.productId && product.productPrice
           );
 
-          if (validProducts.length > 0) {
-            setProducts(validProducts);
-          } else {
-            setProducts([]);
-          }
+          setProducts(validProducts.length > 0 ? validProducts : []);
         } else {
           setProducts([]);
         }
@@ -43,13 +41,39 @@ const Showcase = () => {
     return () => unsubscribe();
   }, []);
 
+  // Filter products based on search query
+  const filteredProducts = products.filter(product =>
+    product.productName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="showcase">
-      {products.length > 0 ? (
-        products.map((product) => (
+      <div className="search-container">
+        {/* Search Button with 3D effect */}
+        <button
+          className="search-button"
+          onClick={() => setIsSearchVisible(!isSearchVisible)}
+        >
+          🔍
+        </button>
+
+        {/* Search input field */}
+        {isSearchVisible && (
+          <input
+            type="text"
+            placeholder="Cari..."
+            className="search-input"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        )}
+      </div>
+
+      {filteredProducts.length > 0 ? (
+        filteredProducts.map((product) => (
           <div key={product.productId} className="product-card">
             <img
               src={product.productImageUrl || 'default-image-url.jpg'}
@@ -59,10 +83,8 @@ const Showcase = () => {
             <p>{product.productDescription || 'No description available.'}</p>
             <p>Price: Rp{product.productPrice}</p>
 
-            {/* Divider abu-abu */}
             <hr className="divider" />
 
-            {/* Tambahkan nama dan foto profil */}
             <div className="profile-container">
               <span className="profile-name">{product.fullName || 'Anonymous'}</span>
               <img
@@ -80,12 +102,10 @@ const Showcase = () => {
       ) : (
         <p>No valid products available.</p>
       )}
-        {/* Footer */}
-        <footer className="footer">
-                <div>
-                    Hak Cipta PT.InnoView Indo Tech @2024
-                </div>
-            </footer>
+
+      <footer className="footer">
+        <div>Hak Cipta PT.InnoView Indo Tech @2024</div>
+      </footer>
     </div>
   );
 };

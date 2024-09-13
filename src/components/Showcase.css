@@ -188,6 +188,60 @@
   color: #333;
 }
 
+/* Styling for the search container */
+.search-container {
+  position: fixed;
+  bottom: 100px;
+  right: 20px; /* Positioned on the right */
+  z-index: 1000; /* Ensure it stays on top of other elements */
+}
+
+/* Styling for the search button */
+.search-button {
+  background-color: #ffffff; /* Set the background to white */
+  color: #007bff; /* Change the icon color to blue for contrast */
+  border: none;
+  border-radius: 50%;
+  padding: 15px;
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Hover effect for the search button */
+.search-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling for the search input */
+.search-input {
+  padding: 10px;
+  width: 200px;
+  border-radius: 25px;
+  border: 2px solid #007bff;
+  outline: none;
+  transition: width 0.4s ease;
+  margin-right: 15px; /* Ensure spacing between the button and input */
+  text-align: right; /* Align text input from right to left */
+}
+
+/* Right-align the placeholder text */
+.search-input::placeholder {
+  font-style: italic;
+  color: #777;
+  text-align: right; /* Align placeholder text to the right */
+}
+
+/* Ensure the input appears next to the button */
+.search-container input {
+  display: inline-block;
+  margin-right: 10px;
+  transition: opacity 0.3s ease;
+}
+
+
 .footer {
   background-color: #333; /* Warna latar belakang gelap */
   color: white; /* Warna teks putih */
