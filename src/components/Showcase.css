@@ -187,3 +187,40 @@
   font-weight: bold;
   color: #333;
 }
+
+.footer {
+  background-color: #333; /* Warna latar belakang gelap */
+  color: white; /* Warna teks putih */
+  text-align: center; /* Letakkan teks di tengah */
+  padding: 20px 0; /* Ruang di atas dan bawah */
+  position: fixed; /* Tetap di bawah layar */
+  left: 0;
+  bottom: 0; /* Menempel di bagian bawah layar */
+  width: 100%; /* Lebar 100% untuk mengisi layar */
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2); /* Bayangan di atas footer */
+  font-size: 14px; /* Ukuran teks lebih kecil */
+  font-family: 'Arial', sans-serif; /* Gaya font yang jelas dan sederhana */
+  z-index: 1000; /* Agar selalu di atas elemen lainnya */
+  animation: footerEffect 3s infinite; /* Animasi berulang setiap 3 detik */
+}
+
+@keyframes footerEffect {
+  0% {
+    background-color: #333; /* Warna awal */
+    color: white;
+    transform: scale(1); /* Ukuran normal */
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    background-color: #00f; /* Warna biru terang pada pertengahan animasi */
+    color: #fff; /* Teks tetap putih */
+    transform: scale(1.05); /* Perbesaran sedikit */
+    box-shadow: 0 0 10px 5px rgba(0, 0, 255, 0.7); /* Bayangan biru */
+  }
+  100% {
+    background-color: #333; /* Kembali ke warna awal */
+    color: white;
+    transform: scale(1); /* Kembali ke ukuran semula */
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2); /* Bayangan kembali ke normal */
+  }
+}

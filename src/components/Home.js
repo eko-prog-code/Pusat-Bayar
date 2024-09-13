@@ -58,6 +58,12 @@ const Home = () => {
                     <p className="image-text">Pelanggan</p>
                 </div>
             </div>
+             {/* Footer */}
+             <footer className="footer">
+                <div>
+                    Hak Cipta PT.InnoView Indo Tech @2024
+                </div>
+            </footer>
 
             {auth.currentUser && (
                 <div className="profile-header text-center">

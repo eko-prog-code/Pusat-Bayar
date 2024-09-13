@@ -80,6 +80,12 @@ const Showcase = () => {
       ) : (
         <p>No valid products available.</p>
       )}
+        {/* Footer */}
+        <footer className="footer">
+                <div>
+                    Hak Cipta PT.InnoView Indo Tech @2024
+                </div>
+            </footer>
     </div>
   );
 };
