@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { ref, onValue } from 'firebase/database';
 import { database } from '../firebase/firebase'; // pastikan path ini sesuai dengan konfigurasi firebase Anda
+import ReactPlayer from 'react-player';
+import Modal from 'react-modal'; // pastikan ini diinstal jika belum
 import './ProductDetail.css';
 
 const ProductDetail = () => {
@@ -9,6 +11,7 @@ const ProductDetail = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false); // State untuk modal video
 
   useEffect(() => {
     const productsRef = ref(database, 'products');
@@ -56,6 +59,14 @@ const ProductDetail = () => {
     alert('Nomor rekening berhasil disalin!');
   };
 
+  const handleVideoModalOpen = () => {
+    setIsVideoModalOpen(true);
+  };
+
+  const handleVideoModalClose = () => {
+    setIsVideoModalOpen(false);
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!product) return <div>No product found.</div>;
@@ -77,9 +88,67 @@ const ProductDetail = () => {
         src={product.productImageUrl || 'https://via.placeholder.com/150'}
         alt={product.productName}
       />
-      <button className="share-button unix-424-share-button" onClick={handleShare}>
-        Share 📤
-      </button>
+
+      <div style={{ display: 'flex', alignItems: 'center', marginTop: '20px' }}>
+        <button className="share-button unix-424-share-button" onClick={handleShare}>
+          Share 📤
+        </button>
+        <button
+          className="video-button unix-424-video-button"
+          style={{
+            marginLeft: '20px',
+            backgroundColor: 'blue',
+            color: 'white',
+            padding: '10px 20px',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}
+          onClick={handleVideoModalOpen}
+        >
+          🎬 Video Produk
+        </button>
+      </div>
+
+      {/* Modal untuk video */}
+      <Modal
+        isOpen={isVideoModalOpen}
+        onRequestClose={handleVideoModalClose}
+        contentLabel="Video Produk"
+        className="video-modal"
+        overlayClassName="video-modal-overlay"
+      >
+        <div style={{ position: 'relative' }}>
+          <button
+            onClick={handleVideoModalClose}
+            style={{
+              position: 'absolute',
+              top: '10px',
+              right: '10px',
+              fontSize: '20px',
+              backgroundColor: 'red',
+              color: 'white',
+              border: 'none',
+              borderRadius: '50%',
+              width: '30px',
+              height: '30px',
+              cursor: 'pointer',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            ✖️
+          </button>
+        </div>
+
+        <ReactPlayer
+          url={product.productPromoVideoUrl} // URL video dari state produk
+          controls
+          width="100%"
+          height="500px"
+        />
+      </Modal>
 
       {/* Divider */}
       <hr style={{ borderTop: '3px solid blue', margin: '20px 0' }} />

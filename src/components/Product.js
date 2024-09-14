@@ -11,6 +11,7 @@ const Product = () => {
   const [productImage, setProductImage] = useState(null);
   const [productDescription, setProductDescription] = useState('');
   const [productPrice, setProductPrice] = useState('');
+  const [productPromoVideoUrl, setProductPromoVideoUrl] = useState(''); // State untuk URL Video Promosi
   const [uploading, setUploading] = useState(false);
 
   const handleFileChange = (e) => {
@@ -63,6 +64,7 @@ const Product = () => {
       productImageUrl,
       productDescription,
       productPrice,
+      productPromoVideoUrl, // Simpan URL Video Promosi
       userId: user.uid,
       fullName: fullName || 'Anonymous',
       profilePicture: profilePicUrl || '',
@@ -75,6 +77,7 @@ const Product = () => {
     setProductImage(null);
     setProductDescription('');
     setProductPrice('');
+    setProductPromoVideoUrl(''); // Reset URL Video Promosi
     setUploading(false);
 
     alert('Produk berhasil disimpan!');
@@ -97,6 +100,16 @@ const Product = () => {
         <div>
           <label>Upload Gambar Produk</label>
           <input type="file" onChange={handleFileChange} />
+        </div>
+
+        <div>
+          <label>Url Video Promosi (YouTube)</label>
+          <input
+            type="text"
+            value={productPromoVideoUrl}
+            onChange={(e) => setProductPromoVideoUrl(e.target.value)}
+            placeholder="Masukkan URL video YouTube"
+          />
         </div>
 
         <div>

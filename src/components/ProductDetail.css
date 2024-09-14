@@ -110,3 +110,43 @@ img:hover {
 .copy-button:focus {
   outline: none;
 }
+
+.video-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 800px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  outline: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.video-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+.react-modal-content {
+  width: 80%;
+  max-width: 800px;
+  height: 80%;
+  max-height: 600px;
+  margin: auto;
+  padding: 20px;
+}
+
+@media only screen and (max-width: 768px) {
+  .react-modal-content {
+    width: 90%;
+    height: 60%;
+    max-height: 400px;
+  }
+}
