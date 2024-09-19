@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { auth } from '../firebase/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import { useNavigate } from 'react-router-dom';
 import styles from './Login.module.css';
 
 const Login = () => {
@@ -9,27 +9,29 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const [showPopup, setShowPopup] = useState(false); // State to control the visibility of the popup
-  const navigate = useNavigate(); // Initialize navigate
+  const [loading, setLoading] = useState(false); // Loading state
+  const [showPopup, setShowPopup] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
+    setLoading(true); // Show loading icon when login starts
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
         console.log('Logged in:', user);
-
-        // Mengambil nama lengkap (fullName) dari displayName
         const fullName = user.displayName;
         console.log('Nama Lengkap:', fullName);
 
-        setShowPopup(true); // Show the popup on successful login
+        setShowPopup(true);
         setTimeout(() => {
-          navigate('/'); // Navigate to the home page after a delay
-        }, 2000); // Adjust the delay as needed
+          setLoading(false); // Hide loading after successful login
+          navigate('/');
+        }, 2000);
       })
       .catch((error) => {
         setError(error.message);
+        setLoading(false); // Hide loading on error
       });
   };
 
@@ -38,7 +40,16 @@ const Login = () => {
   };
 
   return (
-    <div className={styles.loginContainer}>
+    <div className={styles.loginContainer} style={{ position: 'relative' }}>
+      {loading && (
+        <div className="loading-container">
+          <img
+            src="https://firebasestorage.googleapis.com/v0/b/pusatbayar-innoview.appspot.com/o/InnoView-loading-icon.png?alt=media&token=8544f63b-cf61-46c9-b23a-03300e939813"
+            alt="Loading..."
+            className="loading-icon"
+          />
+        </div>
+      )}
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
         <input
@@ -63,7 +74,7 @@ const Login = () => {
               right: '30px',
               top: '50%',
               transform: 'translateY(-50%)',
-              cursor: 'pointer'
+              cursor: 'pointer',
             }}
           >
             {showPassword ? '🙉' : '🙈'}
@@ -71,9 +82,9 @@ const Login = () => {
         </div>
         <button type="submit">Login</button>
       </form>
+
       {error && <p>{error}</p>}
 
-      {/* Display popup on successful login */}
       {showPopup && (
         <div className={styles.popup}>
           <p>Login successful! Redirecting...</p>

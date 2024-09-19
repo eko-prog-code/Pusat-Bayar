@@ -150,3 +150,34 @@ img:hover {
     max-height: 400px;
   }
 }
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.loading-icon {
+  width: 100px;
+  height: 100px;
+  animation: bounce 1.5s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.loading-text {
+  color: white;
+  margin-top: 10px;
+  font-size: 18px;
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+}

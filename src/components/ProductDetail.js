@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { ref, onValue } from 'firebase/database';
-import { database } from '../firebase/firebase'; // pastikan path ini sesuai dengan konfigurasi firebase Anda
+import { database } from '../firebase/firebase';
 import ReactPlayer from 'react-player';
-import Modal from 'react-modal'; // pastikan ini diinstal jika belum
+import Modal from 'react-modal';
 import './ProductDetail.css';
 
 const ProductDetail = () => {
@@ -11,7 +11,7 @@ const ProductDetail = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false); // State untuk modal video
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   useEffect(() => {
     const productsRef = ref(database, 'products');
@@ -20,9 +20,7 @@ const ProductDetail = () => {
       (snapshot) => {
         if (snapshot.exists()) {
           const productsData = snapshot.val();
-
           let foundProduct = null;
-
           for (const userId in productsData) {
             const userProducts = productsData[userId];
             for (const key in userProducts) {
@@ -33,7 +31,6 @@ const ProductDetail = () => {
               }
             }
           }
-
           setProduct(foundProduct || null);
         } else {
           setProduct(null);
@@ -51,7 +48,7 @@ const ProductDetail = () => {
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
-    alert('Domain copied to clipboard!');
+    alert('Link copied to clipboard!');
   };
 
   const handleCopyAccountNumber = () => {
@@ -67,9 +64,26 @@ const ProductDetail = () => {
     setIsVideoModalOpen(false);
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (!product) return <div>No product found.</div>;
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/pusatbayar-innoview.appspot.com/o/InnoView-loading-icon.png?alt=media&token=8544f63b-cf61-46c9-b23a-03300e939813"
+          alt="Loading..."
+          style={{ width: '100px', height: '100px' }}
+        />
+        <p style={{ color: 'white', marginTop: '10px' }}>Sedang load data, sabar ya kak...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!product) {
+    return <div>No product found.</div>;
+  }
 
   return (
     <div className="product-detail unix-424">
@@ -102,7 +116,7 @@ const ProductDetail = () => {
             padding: '10px 20px',
             border: 'none',
             borderRadius: '5px',
-            cursor: 'pointer'
+            cursor: 'pointer',
           }}
           onClick={handleVideoModalOpen}
         >
@@ -110,7 +124,6 @@ const ProductDetail = () => {
         </button>
       </div>
 
-      {/* Modal untuk video */}
       <Modal
         isOpen={isVideoModalOpen}
         onRequestClose={handleVideoModalClose}
@@ -143,17 +156,15 @@ const ProductDetail = () => {
         </div>
 
         <ReactPlayer
-          url={product.productPromoVideoUrl} // URL video dari state produk
+          url={product.productPromoVideoUrl}
           controls
           width="100%"
           height="500px"
         />
       </Modal>
 
-      {/* Divider */}
       <hr style={{ borderTop: '3px solid blue', margin: '20px 0' }} />
 
-      {/* Transfer Information */}
       <div className="transfer-info">
         <p><strong>Pembelian transfer ke:</strong></p>
         <p>Nama: Eko Setiaji</p>

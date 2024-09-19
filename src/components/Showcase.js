@@ -6,9 +6,9 @@ import './Showcase.css';
 
 const Showcase = () => {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null);
-  const [searchQuery, setSearchQuery] = useState(''); // New state for search
+  const [searchQuery, setSearchQuery] = useState(''); // State for search
   const [isSearchVisible, setIsSearchVisible] = useState(false); // Toggle search bar visibility
 
   useEffect(() => {
@@ -18,23 +18,27 @@ const Showcase = () => {
       (snapshot) => {
         const productsData = snapshot.val();
         if (productsData) {
-          const productsList = Object.keys(productsData).map((key) => {
-            const productEntries = productsData[key];
-            return Object.values(productEntries);
-          }).flat();
+          const productsList = Object.keys(productsData)
+            .map((key) => {
+              const productEntries = productsData[key];
+              return Object.values(productEntries);
+            })
+            .flat();
 
           const validProducts = productsList.filter(
-            (product) => product.productName && product.productId && product.productPrice
+            (product) =>
+              product.productName && product.productId && product.productPrice
           );
 
           setProducts(validProducts.length > 0 ? validProducts : []);
         } else {
           setProducts([]);
         }
-        setLoading(false);
+        setLoading(false); // Turn off loading state once data is fetched
       },
       (error) => {
         setError(error.message);
+        setLoading(false); // Turn off loading even on error
       }
     );
 
@@ -42,17 +46,27 @@ const Showcase = () => {
   }, []);
 
   // Filter products based on search query
-  const filteredProducts = products.filter(product =>
+  const filteredProducts = products.filter((product) =>
     product.productName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  if (loading) return <div>Loading...</div>;
+  // Tampilkan animasi loading langsung di sini
+  if (loading) return (
+    <div className="loading-container">
+      <img 
+        src="https://firebasestorage.googleapis.com/v0/b/pusatbayar-innoview.appspot.com/o/InnoView-loading-icon.png?alt=media&token=8544f63b-cf61-46c9-b23a-03300e939813" 
+        alt="Loading..." 
+        className="loading-icon" // Tambahkan class untuk animasi
+      />
+      <p className="loading-text">Sedang load data, sabar ya kak...</p>
+    </div>
+  );
+
   if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="showcase">
       <div className="search-container">
-        {/* Search Button with 3D effect */}
         <button
           className="search-button"
           onClick={() => setIsSearchVisible(!isSearchVisible)}
@@ -60,7 +74,6 @@ const Showcase = () => {
           🔍
         </button>
 
-        {/* Search input field */}
         {isSearchVisible && (
           <input
             type="text"
@@ -82,16 +95,23 @@ const Showcase = () => {
             <h2>{product.productName}</h2>
             <p>{product.productDescription || 'No description available.'}</p>
             <p>Price: Rp{product.productPrice}</p>
-
             <hr className="divider" />
-
             <div className="profile-container">
-              <span className="profile-name">{product.fullName || 'Anonymous'}</span>
+              <span className="profile-name">
+                {product.fullName || 'Anonymous'}
+              </span>
               <img
                 className="photo-akun-shocase24"
                 src={product.profilePicture || 'default-profile-url.jpg'}
                 alt={product.fullName || 'User'}
-                style={{ width: '24%', height: 'auto', borderRadius: '50%', border: '2px solid white', boxShadow: '0 0 5px blue', marginTop: '4px' }}
+                style={{
+                  width: '24%',
+                  height: 'auto',
+                  borderRadius: '50%',
+                  border: '2px solid white',
+                  boxShadow: '0 0 5px blue',
+                  marginTop: '4px',
+                }}
               />
             </div>
             <Link to={`/product/${product.productSlug}/${product.productId}`}>

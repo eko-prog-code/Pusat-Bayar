@@ -13,24 +13,24 @@ const Register = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const [selectedFile, setSelectedFile] = useState(null); // New state for file
-  const [profilePicUrl, setProfilePicUrl] = useState(''); // New state for profile pic URL
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [profilePicUrl, setProfilePicUrl] = useState('');
+  const [loading, setLoading] = useState(false); // Loading state
   const navigate = useNavigate();
 
-  // Listener to check if user is authenticated
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user && selectedFile) {
-        handleFileUpload(user.uid); // User is authenticated, upload the profile picture
+        handleFileUpload(user.uid);
       }
     });
 
-    // Cleanup listener on component unmount
     return () => unsubscribe();
-  }, [selectedFile]); // This effect will run when the selected file changes
+  }, [selectedFile]);
 
   const handleRegister = (e) => {
     e.preventDefault();
+    setLoading(true); // Show loading icon when registration starts
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
@@ -42,6 +42,7 @@ const Register = () => {
       })
       .catch((error) => {
         setError(error.message);
+        setLoading(false); // Hide loading on error
       });
   };
 
@@ -53,7 +54,7 @@ const Register = () => {
 
   const handleFileUpload = (userId) => {
     const profilePicRef = storageRef(storage, `profilePictures/${userId}`);
-    
+
     uploadBytes(profilePicRef, selectedFile)
       .then(() => getDownloadURL(profilePicRef))
       .then((url) => {
@@ -71,17 +72,19 @@ const Register = () => {
       fullName: fullName,
       email: email,
       phoneNumber: phoneNumber,
-      password: password, // Note: Storing passwords in plaintext is not recommended
+      password: password,
       profilePicture: profilePicUrl
     })
-    .then(() => {
-      alert('Berhasil mendaftar!');
-      navigate('/');
-    })
-    .catch((error) => {
-      console.error('Error saving user data:', error);
-      setError('Gagal menyimpan data pengguna.');
-    });
+      .then(() => {
+        setLoading(false); // Hide loading on success
+        alert('Berhasil mendaftar!');
+        navigate('/');
+      })
+      .catch((error) => {
+        console.error('Error saving user data:', error);
+        setError('Gagal menyimpan data pengguna.');
+        setLoading(false); // Hide loading on error
+      });
   };
 
   const togglePasswordVisibility = () => {
@@ -89,7 +92,16 @@ const Register = () => {
   };
 
   return (
-    <div>
+    <div style={{ position: 'relative' }}>
+      {loading && (
+        <div className="loading-container">
+          <img
+            src="https://firebasestorage.googleapis.com/v0/b/pusatbayar-innoview.appspot.com/o/InnoView-loading-icon.png?alt=media&token=8544f63b-cf61-46c9-b23a-03300e939813"
+            alt="Loading..."
+            className="loading-icon"
+          />
+        </div>
+      )}
       <h2>Register</h2>
       <form onSubmit={handleRegister}>
         <input
@@ -138,6 +150,7 @@ const Register = () => {
         <p>Upload PhotoProfile</p>
         <button type="submit">Register</button>
       </form>
+
       {error && <p>{error}</p>}
     </div>
   );
