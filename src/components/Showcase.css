@@ -1,12 +1,23 @@
 /* Styling for the whole showcase container */
+/* Showcase container */
 .showcase {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(3, 1fr); /* 3 cards per row */
   gap: 20px;
   padding: 20px;
   justify-items: center;
   min-height: 100vh;
 }
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+  .showcase {
+    grid-template-columns: 1fr; /* 1 card per row on mobile */
+    padding: 15px;
+    gap: 15px;
+  }
+}
+
 
 /* Styling for each product card */
 .product-card {
