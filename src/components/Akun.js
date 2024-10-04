@@ -67,13 +67,12 @@ const Akun = () => {
     fetchProfilePic();
   }, [userId, user]);
 
-  // Redirect if fullName exists
   useEffect(() => {
-    if (userData.fullName) {
-      navigate(`/akun/${userData.fullName}`);
+    if (userId) {
+      navigate(`/akun/${userId}`);
     }
-  }, [userData.fullName, navigate]);
-
+  }, [userId, navigate]);
+  
   const handleFileChange = (e) => {
     if (e.target.files[0]) {
       setSelectedFile(e.target.files[0]);
